@@ -1,6 +1,5 @@
 import { Sequelize } from "sequelize";
-import Actions from "./models/actions";
-import config from "./config/config";
+const config = require('./config/config');
 
 /**
  * Durin v 1.0
@@ -12,12 +11,12 @@ const Durinn: {[a:string]: any, sequelize: Sequelize} = {
   name: `Durinn Framework v.1.0`,
   description: `In this file you can store global variables as database configuration or global user object`,
   sequelize: new Sequelize(
-    config.database[process.env.NODE_ENV || 'production']['database'],
-    config.database[process.env.NODE_ENV || 'production']['username'],
-    config.database[process.env.NODE_ENV || 'production']['password'],
+    config[process.env.NODE_ENV || 'production']['database'],
+    config[process.env.NODE_ENV || 'production']['username'],
+    config[process.env.NODE_ENV || 'production']['password'],
     {
-      host: config.database[process.env.NODE_ENV || 'production']['host'],
-      dialect: config.database[process.env.NODE_ENV || 'production']['dialect'],
+      host: config[process.env.NODE_ENV || 'production']['host'],
+      dialect: config[process.env.NODE_ENV || 'production']['dialect'],
       pool: { max: 10 }
     }
   )

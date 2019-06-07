@@ -1,3 +1,10 @@
 import Actions from "./models/actions";
 
-Actions.findOne().then((data: any) => console.log(data));
+async function f() {
+  const action = await Actions.findAll();
+  if(action){
+    console.log(action);
+  }
+}
+
+f();
