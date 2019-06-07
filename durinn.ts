@@ -106,7 +106,8 @@ const Bin: {[a: string]: () => void} = {
 
             if (testRE && testRE.length > 1) //RegEx has found something and has more than one entry.
             {
-              content = content.replace('{{MODEL-INTERFACE}}', testRE[0].substr(firstvariable.length).replace('}',''));
+              let t = '  public ' + testRE[0].replace(new RegExp(';\n', 'gm'), ';\n  public ').replace(new RegExp('([\\d\\w])(:)', 'gm'), '$1!:').substr(firstvariable.length).replace('}','').trim();
+              content = content.replace('{{MODEL-INTERFACE}}', t.substr(0, t.length - 6).trim());
             }else{
               content = content.replace('{{MODEL-INTERFACE}}', '');
             }
