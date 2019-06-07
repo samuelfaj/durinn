@@ -19,6 +19,11 @@ const Durinn: {[a:string]: any, sequelize: Sequelize} = {
       dialect: config[process.env.NODE_ENV || 'development']['dialect'],
       pool: { max: 10 },
       define: {
+        timestamps: true,
+        underscored: true,
+        createdAt: 'register_date',
+        updatedAt: 'update_date',
+        deletedAt: 'delete_date',
         defaultScope: {
           attributes: {
             exclude: ['createdAt', 'updatedAt']

@@ -6,10 +6,12 @@ async function f() {
   const action = await Cadastros.findByPk(113);
   if(!action) return false;
 
+  console.log(Cadastros.rawAttributes);
+
   const documentos = await action.getCadastros_Documentos();
   for(let documento of documentos){
     console.log(documento.id)
   }
 }
-
+//
 f();
