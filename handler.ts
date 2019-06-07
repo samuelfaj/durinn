@@ -1,5 +1,5 @@
 import serverless = require('serverless-http');
-import * as express from "express";
+import express from "express";
 
 // routes
 import index from "./routes/index";

@@ -6,7 +6,7 @@ import Durinn from "../durinn";
 const router = express.Router();
 
 router.get('/', function(req: Request, res: Response, next: NextFunction) {
-    res.json(Durinn)
+    res.json(Durinn.name)
 });
 
 
