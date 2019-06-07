@@ -1,9 +1,10 @@
 import Actions from "./models/actions";
 
 async function f() {
-  const action = await Actions.findAll();
+  const action = await Actions.findByPk(1);
   if(action){
-    console.log(action);
+    action.id = 2;
+    await action.save();
   }
 }
 

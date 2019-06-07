@@ -1,9 +1,8 @@
 import Durinn from "../durinn";
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, SaveOptions, InstanceUpdateOptions } from "sequelize";
 
 class Actions extends Model {
   public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-  public descricao!: string | null; // for nullable fields
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -26,7 +25,12 @@ Actions.init({
   }
 }, {
   tableName: 'actions',
-  sequelize: Durinn.sequelize, // this bit is important
+  sequelize: Durinn.sequelize
+});
+
+Actions.beforeUpdate(action => {
+  // An example of hook
+  if(action.id == 1){ throw new Error("Cannot edit action 1"); }
 });
 
 export default Actions;
