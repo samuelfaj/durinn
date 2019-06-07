@@ -50,6 +50,7 @@ provider:
 package:
   include:
     - assets/**
+    - config/**
   exclude:
     - tests/**
 
