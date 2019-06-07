@@ -17,7 +17,8 @@ const Durinn: {[a:string]: any, sequelize: Sequelize} = {
     config.database[process.env.NODE_ENV || 'production']['password'],
     {
       host: config.database[process.env.NODE_ENV || 'production']['host'],
-      dialect: config.database[process.env.NODE_ENV || 'production']['dialect']
+      dialect: config.database[process.env.NODE_ENV || 'production']['dialect'],
+      pool: { max: 10 }
     }
   )
 };
