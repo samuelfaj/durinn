@@ -1,0 +1,12 @@
+import Durinn from "../durinn";
+import { Model, DataTypes } from "sequelize";
+
+class {{MODEL-NAME}} extends Model {
+  {{MODEL-INTERFACE}}
+}
+
+{{MODEL-NAME}}.init({{MODEL-INIT}},
+    sequelize: Durinn.sequelize
+});
+
+export default {{MODEL-NAME}};

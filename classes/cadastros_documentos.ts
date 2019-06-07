@@ -1,6 +1,5 @@
 import Durinn from "../durinn";
-import { Model, DataTypes, SaveOptions, InstanceUpdateOptions } from "sequelize";
-import * as sequelize from "sequelize";
+import { Model, DataTypes } from "sequelize";
 
 class Cadastros_Documentos extends Model {
   public id!: number; // Note that the `null assertion` `!` is required in strict mode.

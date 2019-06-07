@@ -3,10 +3,7 @@ import { Model, DataTypes, SaveOptions, InstanceUpdateOptions, HasManyGetAssocia
 import Cadastros_Documentos from "./cadastros_documentos";
 
 class Cadastros extends Model {
-  public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  // Update attributes automatically - npx ts-node durinn ts-model classes/cadastros.ts
 
   public getCadastros_Documentos!: HasManyGetAssociationsMixin<Cadastros_Documentos>; // Note the null assertions!
 }
