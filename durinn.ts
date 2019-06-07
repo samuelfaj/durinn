@@ -17,7 +17,14 @@ const Durinn: {[a:string]: any, sequelize: Sequelize} = {
     {
       host: config[process.env.NODE_ENV || 'development']['host'],
       dialect: config[process.env.NODE_ENV || 'development']['dialect'],
-      pool: { max: 10 }
+      pool: { max: 10 },
+      define: {
+        defaultScope: {
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
+          }
+        }
+      }
     }
   )
 };
