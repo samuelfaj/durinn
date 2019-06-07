@@ -1,4 +1,4 @@
-import Actions from "./models/actions";
+import Actions from "./classes/actions";
 
 async function f() {
   const action = await Actions.findByPk(1);
