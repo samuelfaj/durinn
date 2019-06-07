@@ -20,6 +20,8 @@ service: durinn # NOTE: update this with your service name
 provider:
   name: aws
   runtime: nodejs10.x
+  environment:
+    NODE_ENV: 'production'
 
 # you can overwrite defaults here
 #  stage: dev
