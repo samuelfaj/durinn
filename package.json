@@ -45,7 +45,7 @@
 		"test": "npx ts-mocha -p tsconfig.json **/*.spec.ts --timeout 5000 --exit",
 		"watch-test": "npx ts-mocha --watch-extensions ts --watch -p tsconfig.json **/*.spec.ts --timeout 15000",
 		"deploy": "npm test && sls deploy --debug --aws-s3-accelerate",
-		"start": "sls offline",
+		"start": "rm -rf .build/ && sls offline",
 		"build": "npx tsc -p .",
 		"playground": "npx nodemon --watch '**/*.ts' --exec 'ts-node' playground.ts",
 		"prettier": "npx prettier --write --tab-width 4 --use-tabs **/*.ts"
