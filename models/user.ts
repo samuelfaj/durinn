@@ -6,7 +6,7 @@ class User extends Model {
 	public id!: number;
 	public register_date!: Date;
 	public name!: string;
-	public cpf!: string;
+	public username!: string;
 	public password!: string;
 }
 
@@ -28,7 +28,7 @@ User.init(
 			allowNull: true,
 			unique: true
 		},
-		cpf: {
+		username: {
 			type: DataTypes.STRING(14),
 			allowNull: true,
 			unique: true

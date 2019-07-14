@@ -17,12 +17,8 @@ export default class BaseRouter {
 		return new RouteResponse();
 	}
 
-	public get user_authenticated() {
+	public get authenticated() {
 		return new AuthenticatedRoute.User(this, this.router);
-	}
-
-	public get admin_authenticated() {
-		return new AuthenticatedRoute.Admin(this, this.router);
 	}
 
 	public get(path: string, _function: (req: Request, res: Response, next: NextFunction) => any) {
