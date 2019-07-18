@@ -196,11 +196,11 @@ const Bin: { [a: string]: () => void } = {
 
 							let associations = fs.readFileSync('associations.ts').toString();
 
-							associations = `import { ${MODEL_NAME}_Associations } from "${file}";\n` + associations;
+							associations = `import { ${MODEL_NAME}_Associations } from "${new_file.replace('.ts', '')}";\n` + associations;
 
 							associations = associations.replace(
 								'export default function() {',
-								`export default function() {\n${MODEL_NAME}_Associations()\n`
+								`export default function() {\n  ${MODEL_NAME}_Associations();`
 							);
 
 							fs.writeFileSync('associations.ts', associations);
