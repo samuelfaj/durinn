@@ -194,6 +194,17 @@ const Bin: { [a: string]: () => void } = {
 								)
 							);
 
+							let associations = fs.readFileSync('associations.ts').toString();
+
+							associations = `import { ${MODEL_NAME}_Associations } from "${file}";\n` + associations;
+
+							associations = associations.replace(
+								'export default function() {',
+								`export default function() {\n${MODEL_NAME}_Associations()\n`
+							);
+
+							fs.writeFileSync('associations.ts', associations);
+
 							exec(
 								`npx prettier --write --tab-width 4 --use-tabs ${new_file}`,
 								(err: any, stdout: any, stderr: any) => {

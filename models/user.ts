@@ -45,3 +45,9 @@ User.init(
 );
 
 export default User;
+
+export function User_Associations(){
+	/** Declare in ../associations.ts */
+	// Example
+	// User.belongsTo(Company);
+}

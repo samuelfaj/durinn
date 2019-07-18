@@ -11,3 +11,11 @@ class {{MODEL-NAME}} extends Model {
 });
 
 export default {{MODEL-NAME}};
+
+export function {{MODEL-NAME}}_Associations(){
+	/** Declare in ../associations.ts */
+	/*
+	    {{MODEL-NAME}}.belongsTo(Example);
+	    {{MODEL-NAME}}.hasMany(Children);
+	*/
+}

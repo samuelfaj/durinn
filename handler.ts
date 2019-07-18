@@ -1,12 +1,19 @@
 import serverless = require('serverless-http');
 import express, { NextFunction, Request, Response } from "express";
 
-// app
+// Run associations
+import associations from "./associations";
+associations();
+
+// app and middlewares
 const app = express();
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+const cors = require('cors');
+app.use(cors());
 
 // routes
 import base from "./routes/base/router";
