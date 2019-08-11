@@ -4,7 +4,8 @@ import User from "../models/user";
 
 const base = new Router();
 
-base.get('/', function(req: Request, res: Response, next: NextFunction) {
+base.get('/', async function(req: Request, res: Response, next: NextFunction) {
+    await User.findAndCountAll();
     res.json(base.response.success())
 });
 
