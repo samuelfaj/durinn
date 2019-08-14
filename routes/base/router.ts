@@ -22,19 +22,43 @@ export default class BaseRouter {
 	}
 
 	public get(path: string, _function: (req: Request, res: Response, next: NextFunction) => any) {
-		return this.router.get(path, _function);
+		return this.router.get(path, async function(req: Request, res: Response, next: NextFunction) {
+			try {
+				return await _function.apply(null, [req, res, next]);
+			} catch(e) {
+				next(e)
+			}
+		});
 	}
 
 	public post(path: string, _function: (req: Request, res: Response, next: NextFunction) => any) {
-		return this.router.post(path, _function);
+		return this.router.post(path, async function(req: Request, res: Response, next: NextFunction) {
+			try {
+				return await _function.apply(null, [req, res, next]);
+			} catch(e) {
+				next(e)
+			}
+		});
 	}
 
 	public put(path: string, _function: (req: Request, res: Response, next: NextFunction) => any) {
-		return this.router.put(path, _function);
+		return this.router.put(path, async function(req: Request, res: Response, next: NextFunction) {
+			try {
+				return await _function.apply(null, [req, res, next]);
+			} catch(e) {
+				next(e)
+			}
+		});
 	}
 
 	public delete(path: string, _function: (req: Request, res: Response, next: NextFunction) => any) {
-		return this.router.delete(path, _function);
+		return this.router.delete(path, async function(req: Request, res: Response, next: NextFunction) {
+			try {
+				return await _function.apply(null, [req, res, next]);
+			} catch(e) {
+				next(e)
+			}
+		});
 	}
 }
 

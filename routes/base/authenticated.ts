@@ -42,7 +42,11 @@ export namespace AuthenticatedRoute {
 					return res.status(403).json(self.base.response.authentication_error());
 				}else{
 					Durinn.user = user;
-					return _function(req, res, next, user);
+					try {
+						return await _function.apply(null, [req, res, next, user]);
+					} catch(e) {
+						next(e)
+					}
 				}
 			});
 		}
@@ -59,7 +63,11 @@ export namespace AuthenticatedRoute {
 					return res.status(403).json(self.base.response.authentication_error());
 				}else{
 					Durinn.user = user;
-					return _function(req, res, next, user);
+					try {
+						return await _function.apply(null, [req, res, next, user]);
+					} catch(e) {
+						next(e)
+					}
 				}
 			});
 		}
@@ -76,7 +84,11 @@ export namespace AuthenticatedRoute {
 					return res.status(403).json(self.base.response.authentication_error());
 				}else{
 					Durinn.user = user;
-					return _function(req, res, next, user);
+					try {
+						return await _function.apply(null, [req, res, next, user]);
+					} catch(e) {
+						next(e)
+					}
 				}
 			});
 		}
@@ -93,7 +105,11 @@ export namespace AuthenticatedRoute {
 					return res.status(403).json(self.base.response.authentication_error());
 				}else{
 					Durinn.user = user;
-					return _function(req, res, next, user);
+					try {
+						return await _function.apply(null, [req, res, next, user]);
+					} catch(e) {
+						next(e)
+					}
 				}
 			});
 		}
