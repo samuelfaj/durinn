@@ -44,8 +44,7 @@
 		"tslint-config-prettier": "^1.18.0"
 	},
 	"scripts": {
-		"test": "npx ts-mocha -p tsconfig.json **/*.spec.ts --timeout 5000 --exit",
-		"watch-test": "npx ts-mocha --watch-extensions ts --watch -p tsconfig.json **/*.spec.ts --timeout 15000",
+		"test": "find ./tests -name '*.spec.ts' | xargs npx ts-mocha --timeout 15000 -p tsconfig.json ",
 		"deploy": "npm test && sls deploy --debug --aws-s3-accelerate",
 		"start": "rm -rf .build/ && sls offline",
 		"build": "npx tsc -p .",
