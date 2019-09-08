@@ -7,7 +7,6 @@ associations();
 
 // app and middlewares
 const app = express();
-require('express-async-errors');
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
