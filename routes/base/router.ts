@@ -4,10 +4,15 @@ import * as core from "express-serve-static-core";
 import default_login_function from "./authenticated";
 const translations = require("../../config/translations") || {};
 
-interface DurinnRouter extends core.Router {
+export interface DurinnRouter extends core.Router {
 	authenticated: (login_function ?: any) => any;
 	response: RouteResponse;
 	translation: (string: string) => string;
+}
+
+export type RequestFilter = {
+	where : any;
+	like ?: any;
 }
 
 const _durinnRouter = function (): DurinnRouter {

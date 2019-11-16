@@ -6,5 +6,9 @@
   "operation successfully completed": {
     "en-us": "Operation successfully completed",
     "pt-br": "Operação concluída com sucesso"
+  },
+  "not found": {
+    "en-us": "Not Found",
+    "pt-br": "Não Encontrado"
   }
 }

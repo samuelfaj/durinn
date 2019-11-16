@@ -23,9 +23,10 @@ if(!process.env.NODE_ENV || process.env.IS_OFFLINE){
 const verbose = true;
 const config = Config[process.env.NODE_ENV];
 
-const Durinn: { [a: string]: any; sequelize: Sequelize} = {
+const Durinn: { [a: string]: any; sequelize: Sequelize, env: string} = {
 	name: `Durinn Framework v.1.1`,
 	description: `In this file you can store global variables as database configuration or global user object`,
+	env: process.env.NODE_ENV,
 	sequelize: new Sequelize(
 		config["database"],
 		config["username"],
