@@ -19,6 +19,14 @@ export default class Restful {
 			res.locals.self = self;
 			next();
 		});
+	}
+
+	get export(){
+		this.init();
+		return this.router;
+	}
+
+	public init(){
 		this.router.use(`/${this.endpoint}/`, this.use);
 		this.router.use(`/${this.endpoint}/search/:offset?/:limit?`, this.search);
 		this.router.post(`/${this.endpoint}/`, this.post);
@@ -27,6 +35,8 @@ export default class Restful {
 		this.router.get(`/${this.endpoint}/:id`, this.get);
 		this.router.put(`/${this.endpoint}/:id`, this.put);
 		this.router.delete(`/${this.endpoint}/:id`, this.delete);
+
+		return this;
 	}
 
 	public async use(req: Request, res: Response, next: NextFunction){

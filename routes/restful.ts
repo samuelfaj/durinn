@@ -19,7 +19,15 @@ import base from "./base/router";
 class UserRestful extends Restful{
 	constructor(){
 		super(Router, User);
+		this.router.use(`/${this.endpoint}/`, this.custom);
 	}
+
+	// Example of creating a custom method.
+	async custom(req: Request, res: Response, next: NextFunction){
+		console.log('An example of custom function')
+		next();
+	}
+
 
 	// Example of overriding a restful method.
 	async delete(req: Request, res: Response, next: NextFunction){
@@ -27,4 +35,4 @@ class UserRestful extends Restful{
 	}
 }
 
-export default (new UserRestful()).router;
+export default (new UserRestful()).export;
