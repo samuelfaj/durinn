@@ -92,7 +92,7 @@ export default class SQL_Restful {
 
 	public async search(req: Request, res: Response, next: NextFunction){
 		const self = res.locals.self;
-		const filters = req.app.get('filters');
+		const filters = req.app.get('filters') || {};
 		const limit = parseInt(req.params.limit) || 50;
 		const model = await self.MODEL.findAndCountAll({
 			where: filters[self.MODEL_NAME] || undefined,
