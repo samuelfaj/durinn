@@ -54,7 +54,7 @@ const Bin: { [a: string]: () => void } = {
 			"\x1b[32m",
 			"npx ts-node durinn dump-models",
 			"\x1b[0m",
-			"     Convert database (config/config.json) into models on ./models folder"
+			"                 Convert database (config/config.json) into models on ./models folder"
 		);
 		// console.log(
 		// 	"\x1b[32m",
@@ -67,8 +67,24 @@ const Bin: { [a: string]: () => void } = {
 			"\x1b[32m",
 			"npx ts-node durinn generate_types",
 			"\x1b[0m",
-			"  Convert Sequelize models into types declaration accessible from the endpoint /types"
+			"              Convert Sequelize models into types declaration accessible from the endpoint /types"
 		);
+		console.log(" - Sequelize:");
+		console.log(
+			"\x1b[32m",
+			"npx sequelize migration:create",
+			"\x1b[31m --name=<NAME>\x1b[0m",
+			"\x1b[0m",
+			"  Creates a migration"
+		);
+		console.log(
+			"\x1b[32m",
+			"npx sequelize seed:generate",
+			"\x1b[31m    --name=<NAME>\x1b[0m",
+			"\x1b[0m",
+			"  Creates a seeder"
+		);
+		console.log("");
 	},
 	dump_models: async function() {
 		console.log(" - Dumping database...");
