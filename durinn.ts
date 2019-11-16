@@ -1,20 +1,30 @@
 #!/usr/bin/env node
 import { Sequelize } from "sequelize";
+import { ClassDeclaration, DeclarationVisibility, getVisibilityText, TypescriptParser } from "typescript-parser";
+
 
 const { exec } = require("child_process");
 const Config = require("./config/config");
+
 const fs = require("fs");
+const path = require("path");
+const parser = new TypescriptParser();
+
+if(!process.env.NODE_ENV || process.env.IS_OFFLINE){
+	process.env.NODE_ENV = "development";
+}
 
 /**
- * Durin v 1.0
+ * Durin v 1.1
  * ---------------
  * This script is used as a global script to store variables
  */
 
-const config = Config[process.env.NODE_ENV || "development"];
+const verbose = true;
+const config = Config[process.env.NODE_ENV];
 
 const Durinn: { [a: string]: any; sequelize: Sequelize} = {
-	name: `Durinn Framework v.1.0`,
+	name: `Durinn Framework v.1.1`,
 	description: `In this file you can store global variables as database configuration or global user object`,
 	sequelize: new Sequelize(
 		config["database"],
@@ -25,18 +35,11 @@ const Durinn: { [a: string]: any; sequelize: Sequelize} = {
 			dialect: config["dialect"],
 			port: config["port"],
 			pool: { max: 10 },
+			// timezone: '-03:00',
+			logging: verbose && (process.env.NODE_ENV != 'production'),
 			define: {
-				timestamps: false,
-				// underscored: true,
-				// paranoid: true,
-				// createdAt: "register_date",
-				// updatedAt: "update_date",
-				// deletedAt: "delete_date",
-				// defaultScope: {
-				// 	attributes: {
-				// 		exclude: ["createdAt", "updatedAt"]
-				// 	}
-				// }
+				timestamps: true,
+				paranoid: true,
 			}
 		}
 	)
@@ -198,12 +201,14 @@ const Bin: { [a: string]: () => void } = {
 
 							associations = `import { ${MODEL_NAME}_Associations } from "${new_file.replace('.ts', '')}";\n` + associations;
 
-							associations = associations.replace(
-								'export default function() {',
-								`export default function() {\n  ${MODEL_NAME}_Associations();`
-							);
+							if(associations.indexOf(`${MODEL_NAME}_Associations()`) == -1){
+								associations = associations.replace(
+									'export default function() {',
+									`export default function() {\n  ${MODEL_NAME}_Associations();`
+								);
 
-							fs.writeFileSync('associations.ts', associations);
+								fs.writeFileSync('associations.ts', associations);
+							}
 
 							exec(
 								`npx prettier --write --tab-width 4 --use-tabs ${new_file}`,
@@ -221,6 +226,141 @@ const Bin: { [a: string]: () => void } = {
 				});
 			}
 		);
+	},
+	generate_types: async function(){
+		fs.readdir(__dirname + '/models', async function (err: Error, files: string[]) {
+
+			if(err){
+				throw err;
+			}
+
+			let types = '';
+
+			const show = { properties: true, methods: false };
+
+			const genType = async function(filePath: string){
+
+				const sequelizeTypes = [
+					"HasManyAddAssociationMixin",
+					"HasManyAddAssociationMixinOptions",
+					"HasManyAddAssociationsMixin",
+					"HasManyAddAssociationsMixinOptions",
+					"HasManyCountAssociationsMixin",
+					"HasManyCountAssociationsMixinOptions",
+					"HasManyCreateAssociationMixin",
+					"HasManyCreateAssociationMixinOptions",
+					"HasManyGetAssociationsMixin",
+					"HasManyGetAssociationsMixinOptions",
+					"HasManyHasAssociationMixin",
+					"HasManyHasAssociationMixinOptions",
+					"HasManyHasAssociationsMixin",
+					"HasManyHasAssociationsMixinOptions",
+					"HasManyRemoveAssociationMixin",
+					"HasManyRemoveAssociationMixinOptions",
+					"HasManyRemoveAssociationsMixin",
+					"HasManyRemoveAssociationsMixinOptions",
+					"HasManySetAssociationsMixin",
+					"HasManySetAssociationsMixinOptions",
+					"HasOneCreateAssociationMixin",
+					"HasOneCreateAssociationMixinOptions",
+					"HasOneGetAssociationMixin",
+					"HasOneGetAssociationMixinOptions",
+					"HasOneSetAssociationMixin",
+					"HasOneSetAssociationMixinOptions",
+					"BelongsToCreateAssociationMixin",
+					"BelongsToCreateAssociationMixinOptions",
+					"BelongsToGetAssociationMixin",
+					"BelongsToGetAssociationMixinOptions",
+					"BelongsToManyAddAssociationMixin",
+					"BelongsToManyAddAssociationMixinOptions",
+					"BelongsToManyAddAssociationsMixin",
+					"BelongsToManyAddAssociationsMixinOptions",
+					"BelongsToManyCountAssociationsMixin",
+					"BelongsToManyCountAssociationsMixinOptions",
+					"BelongsToManyCreateAssociationMixin",
+					"BelongsToManyCreateAssociationMixinOptions",
+					"BelongsToManyGetAssociationsMixin",
+					"BelongsToManyGetAssociationsMixinOptions",
+					"BelongsToManyHasAssociationMixin",
+					"BelongsToManyHasAssociationMixinOptions",
+					"BelongsToManyHasAssociationsMixin",
+					"BelongsToManyHasAssociationsMixinOptions",
+					"BelongsToManyRemoveAssociationMixin",
+					"BelongsToManyRemoveAssociationMixinOptions",
+					"BelongsToManyRemoveAssociationsMixin",
+					"BelongsToManyRemoveAssociationsMixinOptions",
+					"BelongsToManySetAssociationsMixin",
+					"BelongsToManySetAssociationsMixinOptions",
+					"BelongsToSetAssociationMixin",
+					"BelongsToSetAssociationMixinOptions"
+				];
+
+				const parsed = await parser.parseFile(filePath, "workspace root");
+				const declaration: any = parsed.declarations[0];
+
+				const className = declaration.name;
+
+				const classMethods = declaration.methods;
+				const publicMethods = classMethods
+					.filter((method: any) => method.visibility === undefined || method.visibility > 1);
+
+				let properties = [];
+
+				for (let property of declaration.properties) {
+					if (
+						property.visibility === undefined ||
+						property.visibility == DeclarationVisibility.Public &&
+						property.type.indexOf("<") == -1 &&
+						sequelizeTypes.indexOf(property.type) == -1 &&
+						!property.isStatic
+					) {
+						const signal = property.isOptional ? "?:" : ":";
+						const type = property.isStatic ? "static " : "";
+						const visibility = getVisibilityText(property.visibility);
+						properties.push(`${property.name}${signal} ${property.type}`);
+					}
+				}
+
+				const methods = publicMethods.map((method: any) => {
+					const signatureArray = method.parameters.map((param: any) => `${param.name}: ${param.type}`);
+
+					const signature = signatureArray.join(", ");
+					const name = `${method.name}`;
+					const returnType = method.type || "{}";
+					return `${name}(${signature}): ${returnType}`;
+				});
+
+				const response = `export type ${className} = {${properties.length == 0 || !show.properties ? "" : (properties.join(";\n    ") + ";")} ${methods.length == 0 || !show.methods ? "" : (methods.join(";\n    ") + ";")}}`;
+
+				return response;
+			}
+
+			for(let file of files){
+				if(path.extname(file) == '.ts'){
+					types += await genType(__dirname + '/models/' + file) + "\n\n";
+				}
+			}
+
+			fs.writeFileSync(__dirname + '/assets/types.ts', types);
+
+			exec(
+				`npx prettier --write --tab-width 4 --use-tabs ${__dirname + '/assets/types.ts'}`,
+				(err: any, stdout: any, stderr: any) => {
+					fs.rename(__dirname + '/assets/types.ts', __dirname + '/assets/types.txt', function(err: Error) {
+						if ( err ){
+							console.error('ERROR: ' + err);
+						}else{
+							console.log(
+								"\x1b[32m",
+								'Types',
+								"\x1b[0m",
+								"Created"
+							);
+						}
+					});
+				}
+			);
+		});
 	}
 };
 

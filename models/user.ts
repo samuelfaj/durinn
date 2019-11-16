@@ -4,7 +4,9 @@ import sequelize from "sequelize";
 
 class User extends Model {
 	public id!: number;
-	public register_date!: Date;
+	public createdAt!: Date;
+	public updatedAt!: Date | null;
+	public deletedAt!: Date | null;
 	public name!: string;
 	public username!: string;
 	public password!: string;
@@ -18,10 +20,18 @@ User.init(
 			primaryKey: true,
 			autoIncrement: true
 		},
-		register_date: {
+		createdAt: {
 			type: DataTypes.DATE,
 			allowNull: true,
 			defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
+		},
+		updatedAt: {
+			type: DataTypes.DATE,
+			allowNull: true,
+		},
+		deletedAt: {
+			type: DataTypes.DATE,
+			allowNull: true,
 		},
 		name: {
 			type: DataTypes.STRING(100),

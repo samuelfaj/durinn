@@ -1,16 +1,16 @@
 import Router from "./base/router";
 import {Request, Response, NextFunction} from "express";
-import User from "../models/user";
 
-const base = new Router();
+const base = Router;
 
 base.get('/', async function(req: Request, res: Response, next: NextFunction) {
-    await User.findAndCountAll();
-    res.json(base.response.success())
+    base.response.success("t");
 });
 
-base.authenticated.get('/', function(req: Request, res: Response, next: NextFunction, user: User) {
-    res.json(base.response.success(user))
+base.get('/login', base.authenticated, function(req: Request, res: Response, next: NextFunction) {
+    // req.app.get('user')
+    // res.locals.user;
+    base.response.success(res.locals.user, 'Durinn framework');
 });
 
-export default base.router;
+export default base;

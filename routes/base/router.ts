@@ -1,96 +1,106 @@
 import { NextFunction, Request, Response, Router } from "express";
 import * as express from "express";
-import {AuthenticatedRoute} from "./authenticated";
+import * as core from "express-serve-static-core";
+import default_login_function from "./authenticated";
+const translations = require("../../config/translations") || {};
 
-export default class BaseRouter {
-	public static get response(){
-		return new RouteResponse();
-	}
-
-	public router: Router;
-
-	constructor() {
-		this.router = express.Router();
-	}
-
-	public get response(){
-		return new RouteResponse();
-	}
-
-	public get authenticated() {
-		return new AuthenticatedRoute.User(this, this.router);
-	}
-
-	public get(path: string, _function: (req: Request, res: Response, next: NextFunction) => any) {
-		return this.router.get(path, async function(req: Request, res: Response, next: NextFunction) {
-			try {
-				return await _function.apply(null, [req, res, next]);
-			} catch(e) {
-				next(e)
-			}
-		});
-	}
-
-	public post(path: string, _function: (req: Request, res: Response, next: NextFunction) => any) {
-		return this.router.post(path, async function(req: Request, res: Response, next: NextFunction) {
-			try {
-				return await _function.apply(null, [req, res, next]);
-			} catch(e) {
-				next(e)
-			}
-		});
-	}
-
-	public put(path: string, _function: (req: Request, res: Response, next: NextFunction) => any) {
-		return this.router.put(path, async function(req: Request, res: Response, next: NextFunction) {
-			try {
-				return await _function.apply(null, [req, res, next]);
-			} catch(e) {
-				next(e)
-			}
-		});
-	}
-
-	public delete(path: string, _function: (req: Request, res: Response, next: NextFunction) => any) {
-		return this.router.delete(path, async function(req: Request, res: Response, next: NextFunction) {
-			try {
-				return await _function.apply(null, [req, res, next]);
-			} catch(e) {
-				next(e)
-			}
-		});
-	}
+interface DurinnRouter extends core.Router {
+	authenticated: (login_function ?: any) => any;
+	response: RouteResponse;
+	translation: (string: string) => string;
 }
 
+const _durinnRouter = function (): DurinnRouter {
+	const router = express.Router() as any;
+	Object.setPrototypeOf(Router, _durinnRouter);
 
-class RouteResponse {
-	public success(response: any = null, message = null, code = 200){
-		return {
+	router.authenticated = default_login_function;
+
+	router.use(function (req: Request, res: Response, next: NextFunction) {
+
+		Object.defineProperty(router, "response", {
+			get: function () {
+				return new RouteResponse(router, req, res, next);
+			}
+		});
+
+		router.translation = function(string: string) {
+			const key = string.toLowerCase();
+			const language = req.headers.language as string || 'en-us';
+
+			try{
+				if(typeof translations[key] === "object"){
+					if(typeof translations[key][language.toLowerCase()] === "string"){
+						return translations[key][language.toLowerCase()];
+					}
+				}
+			}catch (e) {
+				console.error('Error in translation', e);
+			}
+
+			return string;
+		};
+
+		next();
+	});
+
+	return router;
+};
+
+export default _durinnRouter();
+
+export class RouteResponse {
+	constructor(private router: DurinnRouter, private req: Request, private res: Response, private next: NextFunction) {
+	}
+
+	public success(response: any = null, message ?: string, code = 200, res = true){
+		const self = this;
+		const obj = {
 			code: code,
 			error: false,
 			error_stack: null,
 			return: response,
-			message: typeof response === "string" ? response : message || 'Ação realizada com sucesso!'
+			message: self.router.translation(typeof response == "string" && !message ? response: message || "operation successfully completed")
+		};
+
+		if(res && self.res) {
+			self.res.json(obj);
 		}
+
+		return obj;
 	}
 
-	public error(code: number = 500, message: string, error_stack: any = null){
-		return {
+	public error(code: number = 500, message: string, error_stack: any = null, res = true){
+		const self = this;
+		const obj = {
 			code: code,
 			error: true,
 			return: null,
 			error_stack: error_stack,
-			message: message
+			message: self.router.translation(message)
+		};
+
+		if(res && self.res) {
+			self.res.json(obj);
 		}
+
+		return obj;
 	}
 
-	public authentication_error(message = 'Você precisa estar logado no sistema', code: number = 403, error_stack: any = null){
-		return {
+	public authentication_error(message = "You must be logged in", code: number = 403, error_stack: any = null, res = true){
+		const self = this;
+		const obj = {
 			code: code,
 			error: true,
 			return: null,
 			error_stack: error_stack,
-			message: message
+			message: self.router.translation(message)
+		};
+
+		if(res && self.res) {
+			self.res.json(obj);
 		}
+
+		return obj;
 	}
 }

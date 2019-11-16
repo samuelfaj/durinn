@@ -1,6 +1,6 @@
 {
 	"name": "durinn",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "A node.js serverless framework",
 	"main": "handler",
 	"directories": {
@@ -19,7 +19,8 @@
 		"serverless-http": "^2.0.2",
 		"serverless-offline": "^5.0.1",
 		"serverless-plugin-typescript": "1.1.7",
-		"typescript": "^3.5.1"
+		"typescript": "^3.5.1",
+		"typescript-parser": "^2.6.1"
 	},
 	"devDependencies": {
 		"@types/bluebird": "^3.5.27",
@@ -44,9 +45,10 @@
 		"tslint-config-prettier": "^1.18.0"
 	},
 	"scripts": {
-		"test": "find ./tests -name '*.spec.ts' | xargs npx ts-mocha --timeout 15000 -p tsconfig.json ",
-		"deploy": "npm test && sls deploy --debug --aws-s3-accelerate",
-		"start": "rm -rf .build/ && sls offline",
+		"test": "export NODE_ENV=development && npx ts-mocha -p tsconfig.json **/*.spec.ts --timeout 15000 --exit",
+		"watch-test": "npx ts-mocha --watch-extensions ts --watch -p tsconfig.json **/*.spec.ts --timeout 15000",
+		"deploy": "npx ts-node durinn generate_types && export NODE_ENV=production && sequelize db:migrate && npm test && sls deploy --debug --aws-s3-accelerate",
+		"start": "npx ts-node durinn generate_types && rm -rf .build && export NODE_ENV=development && sequelize db:migrate && sls offline",
 		"build": "npx tsc -p .",
 		"playground": "npx nodemon --watch '**/*.ts' --exec 'ts-node' playground.ts",
 		"prettier": "npx prettier --write --tab-width 4 --use-tabs **/*.ts"

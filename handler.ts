@@ -18,11 +18,18 @@ app.use(cors());
 // routes
 import base from "./routes/base/router";
 import index from "./routes/index";
+import types from "./routes/types";
 
 app.use('/', index);
+app.use('/', types);
 
 // Error-Handling Middleware
-app.use(function (error: Error, req: Request, res: Response, next: NextFunction) {
+import { AuthError } from "./routes/base/authenticated";
+app.use(function (error: Error | AuthError, req: Request, res: Response, next: NextFunction) {
+	if('authentication_error' in error){
+		return res.json(base.response.authentication_error());
+	}
+
 	res.json(base.response.error(500, error.message, error.stack));
 });
 

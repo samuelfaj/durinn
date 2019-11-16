@@ -1,0 +1,10 @@
+{
+  "you must be logged in": {
+    "en-us": "You must be logged in",
+    "pt-br": "Você precisa estar logado no sistema"
+  },
+  "operation successfully completed": {
+    "en-us": "Operation successfully completed",
+    "pt-br": "Operação concluída com sucesso"
+  }
+}
