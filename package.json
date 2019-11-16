@@ -45,6 +45,7 @@
 		"tslint-config-prettier": "^1.18.0"
 	},
 	"scripts": {
+		"durinn": "npx ts-node durinn",
 		"test": "export NODE_ENV=development && npx ts-mocha -p tsconfig.json **/*.spec.ts --timeout 15000 --exit",
 		"watch-test": "npx ts-mocha --watch-extensions ts --watch -p tsconfig.json **/*.spec.ts --timeout 15000",
 		"deploy": "npx ts-node durinn generate_types && export NODE_ENV=production && sequelize db:migrate && npm test && sls deploy --debug --aws-s3-accelerate",
