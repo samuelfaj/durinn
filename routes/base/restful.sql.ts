@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import Sequelize from "sequelize";
 import base from "./router";
 
-export default class Restful {
+export default class SQL_Restful {
 	protected MODEL_NAME: string;
 
 	constructor(readonly router: DurinnRouter, readonly MODEL: any, protected endpoint: string = ''){

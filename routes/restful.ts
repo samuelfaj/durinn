@@ -1,6 +1,6 @@
 import Router, { RequestFilter } from "./base/router";
 import User from "../models/user";
-import Restful from "./base/restful";
+import SQL_Restful from "./base/restful.sql";
 import { NextFunction, Request, Response } from "express";
 import base from "./base/router";
 
@@ -16,7 +16,7 @@ import base from "./base/router";
  * ---------------------------------------
  */
 
-class UserRestful extends Restful{
+class UserRestful extends SQL_Restful{
 	constructor(){
 		super(Router, User);
 		this.router.use(`/${this.endpoint}/`, this.custom);
