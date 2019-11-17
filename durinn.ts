@@ -364,7 +364,7 @@ const Bin: { [a: string]: () => void } = {
 				}
 			}
 
-			fs.writeFileSync(__dirname + '/assets/types.ts', types);
+			fs.writeFileSync(__dirname + '/assets/types.ts', `export namespace Types{${types}}`);
 
 			exec(
 				`npx prettier --write --tab-width 4 --use-tabs ${__dirname + '/assets/types.ts'}`,
