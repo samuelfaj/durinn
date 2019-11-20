@@ -2,9 +2,8 @@
 import { Sequelize } from "sequelize";
 import { ClassDeclaration, DeclarationVisibility, getVisibilityText, TypescriptParser } from "typescript-parser";
 
-
 const { exec } = require("child_process");
-const Config = require("./config/config");
+const config = require("./config/config");
 
 const fs = require("fs");
 const path = require("path");
@@ -21,20 +20,19 @@ if(!process.env.NODE_ENV || process.env.IS_OFFLINE){
  */
 
 const verbose = true;
-const config = Config[process.env.NODE_ENV];
 
 const Durinn: { [a: string]: any; sequelize: Sequelize, env: string} = {
 	name: `Durinn Framework v.1.1`,
 	description: `In this file you can store global variables as database configuration or global user object`,
 	env: process.env.NODE_ENV,
 	sequelize: new Sequelize(
-		config["database"],
-		config["username"],
-		config["password"],
+		config.database[process.env.NODE_ENV]["database"],
+		config.database[process.env.NODE_ENV]["username"],
+		config.database[process.env.NODE_ENV]["password"],
 		{
-			host: config["host"],
-			dialect: config["dialect"],
-			port: config["port"],
+			host: config.database[process.env.NODE_ENV]["host"],
+			dialect: config.database[process.env.NODE_ENV]["dialect"],
+			port: config.database[process.env.NODE_ENV]["port"],
 			pool: { max: 10 },
 			// timezone: '-03:00',
 			logging: verbose && (process.env.NODE_ENV != 'production'),
