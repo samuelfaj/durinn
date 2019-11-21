@@ -23,11 +23,15 @@ const _durinnRouter = function (): DurinnRouter {
 
 	router.use(function (req: Request, res: Response, next: NextFunction) {
 
-		Object.defineProperty(router, "response", {
-			get: function () {
-				return new RouteResponse(router, req, res, next);
-			}
-		});
+		try{
+			Object.defineProperty(router, "response", {
+				get: function () {
+					return new RouteResponse(router, req, res, next);
+				}
+			});
+		}catch (e) {
+
+		}
 
 		router.translation = function(string: string) {
 			const key = string.toLowerCase();
